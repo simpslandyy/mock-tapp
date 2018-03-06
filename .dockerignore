@@ -1,0 +1,29 @@
+.git
+
+Dockerfile
+docker-compose.yml
+
+# Local environment shouldn't be copied
+.env
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+# Ignore PG data files
+/db/pg
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+/node_modules
+/yarn-error.log
+
+.byebug_history
+/public/packs
+/node_modules
