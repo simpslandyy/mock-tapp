@@ -1,12 +1,22 @@
-import { getApplications } from '../../services/fetching';
+import { getAll } from '../../services/fetching';
+import { alertTypes } from '../constants';
 
-export function fetchAll() {
-  console.log("Fetching all!");
+export const fetchAll = () => {
   return dispatch => {
-      dispatch(successFetch(getApplications()))
+    getAll().then((data) => {
+      dispatch(successFetch(data))
+    }).catch((err) => {
+      dispatch(failedFetch(err))
+    })
   }
 }
 
-function successFetch(app) {
-  return { type: 'FETCH', applications: app };
-}
+
+// export changeCourseProperties = () => {
+//   return dispatch => {
+//
+//   }
+// }
+
+const successFetch = (body) => { return { type: alertTypes.FETCH_ALL, resp: body }; };
+const failedFetch = (err) => { return { type: alertTypes.ERROR, resp: err } };

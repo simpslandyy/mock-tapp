@@ -1,74 +1,65 @@
-export function getApplicants() {
+// until i can figure out where to add this in the bundle
+import "regenerator-runtime/runtime";
+import { routes } from '../store/constants';
+import { methods } from '../store/constants';
 
+const fetchCall = async (route, config) => {
+  let response = await fetch(route, config);
+  let data = await response.json();
+  return {data: data, status: response.status};
 }
 
-export function getAssignments() {
+export const getAll = async() => {
+  let applicants = await getApplicants();
+  let positions = await getPositions();
+  let assignments = await getAssignments();
+  let applications = await getApplications();
+  let instructors = await getInstructors();
 
+  // HANDLING ERRORS???
+  let data = {
+    applicants: applicants.data,
+    positions: positions.data,
+    assignments: assignments.data,
+    applications: applications.data,
+    instructors: instructors.data
+  }
+  // console.log({path: route, body: data});
+  return data;
 }
 
-export function getApplications() {
-  return [
-        {
-            "app_id": "1",
-            "utorid": "applicant1",
-            "first_name": "Mjolarkark",
-            "last_name": "Zedslamares",
-            "email": "mjolarkark.zedslamares@mail.utoronto.ca",
-            "phone": "647628818",
-            "student_no": "1342088432",
-            "address": "1 Slamares St.",
-            "ta_training": "N",
-            "access_acad_history": "N",
-            "dept": "Other",
-            "program_id": "8UG",
-            "yip": "1",
-            "course_preferences": "",
-            "ta_experience": "C4M101H1F (0), CSC108H1F-A (0), CSC104H1F (0), CSC104H1S (0), CSC108H1F (0), CSC411H1F/2515HF (0)",
-            "academic_qualifications": "qual",
-            "technical_skills": "tech",
-            "full_time": "Y",
-            "availability": "",
-            "other_info": "",
-            "special_needs": "",
-            "last_updated": "2017-06-16 10:18:37",
-            "courses": [""]
-        },
-        {
-            "app_id": "2",
-            "utorid": "applicant2",
-            "first_name": "Zorkairmed",
-            "last_name": "Krired",
-            "email": "zorkairmed.krired@mail.utoronto.ca",
-            "phone": "6473189830",
-            "student_no": "1722477828",
-            "address": "2 Red St.",
-            "ta_training": "N",
-            "access_acad_history": "N",
-            "dept": "Engineering",
-            "program_id": "8UG",
-            "yip": "6",
-            "course_preferences": "",
-            "ta_experience": "CSC104H1S (8), CSC443H1F (5), CSC108H1F-A (5), CSC465H1F/2104HF (4), CSC2104HF (4)",
-            "academic_qualifications": "",
-            "technical_skills": "",
-            "full_time": "Y",
-            "availability": "Available",
-            "other_info": "",
-            "special_needs": "",
-            "last_updated": "2017-06-16 10:18:37",
-            "courses": ["CSC104H1S", "CSC443H1F"]
-        }
-    ];
+export const getApplicants = () => {
+  return fetchCall(routes.APPLICANTS, methods.GET)
 }
 
-export function getCourses() {
-
+export const getPositions = () => {
+  return fetchCall(routes.POSITIONS, methods.GET)
 }
 
-export function getInstructors() {
-
+export const getAssignments = () => {
+  return fetchCall(routes.ASSIGNMENTS, methods.GET);
 }
 
-export function postAssignments() {
+export const getApplications = () => {
+  return fetchCall(routes.APPLICATIONS, methods.GET);
+}
 
+
+export const getInstructors = () => {
+  return fetchCall(routes.INSTRUCTORS, methods.GET);
+}
+
+export const putPositions = (body) => {
+  let config = methods.PUT;
+  config['body'] = JSON.stringify(body);
+  return fetchCall(routes.POSITIONS, config)
+}
+
+export const postEmails = (body) => {
+  console.log("POSTING EMAIL IN FETCHING LOGIC")
+  // console.log({routes: routes, config: methods})
+  let config = methods.POST;
+  config.body = JSON.stringify(body);
+  console.log(config)
+  return fetchCall(routes.EMAILASSIGNMENTS, config);
 }
