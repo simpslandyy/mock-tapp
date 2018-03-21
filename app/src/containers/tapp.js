@@ -1,20 +1,19 @@
 import React from 'react';
-import { fetchAll }  from '../store/app/action';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { fetchPositions }  from '../store/positions/action';
 
 
 class TAPP extends React.Component {
   componentDidMount() {
-    this.props.fetchData();
+    this.props.fetchPositions();
   }
 
   render() {
     return (
-      <Router basename="mock-tapp">
+      <Router basename="tapp">
         <div>
-          <Switch>
-          </Switch>
+          <Route path='/byPositions' render={() => <Positions {...this.props}/>} />
         </div>
       </Router>
     )
@@ -33,7 +32,7 @@ const mapStatetoProps = state => {
 
 const mapDispatchtoProps = dispatch => {
   return {
-    fetchData: () => dispatch(fetchAll())
+    fetchPositions: () => dispatch(fetchPositions())
   }
 }
 
