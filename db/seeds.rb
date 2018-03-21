@@ -38,3 +38,8 @@ end
 insert_seed_data(Duty, duty, "Duty")
 insert_seed_data(Training, training, "Training")
 insert_seed_data(Category, category, "Category")
+
+
+file = File.read(File.dirname(__FILE__) + '/seeds/round_110.json');
+data_hash = JSON.parse(file)
+ChassImporter.new(data_hash, 'Fall 2018', '2018')
