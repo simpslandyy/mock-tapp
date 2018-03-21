@@ -1,21 +1,23 @@
 import { getPositions } from '../../services/fetching';
 import { alerts } from '../constants';
+import { success, failure, request } from '../dispatchBuild';
 
 export function fetchPositions() {
-  console.log("Fetching all!");
   return dispatch => {
-      dispatch(request('Fetching positions'));
+      dispatch(request(alerts.REQUEST, 'Fetching positions'));
 
       getPositions().then(resp => {
         if (resp.status == 200) {
-          dispatch(success(resp.data))
+          dispatch(success(alerts.FETCH_POSITIONS, resp.data))
         } else {
-          dispatch(failure(resp.data.message))
+          dispatch(failure(alerts.ERROR, resp.data.message))
         }
       })
   }
 }
 
-const success = (body) => { return { type: alerts.SUCCESS_POS, data:body }; };
-const failure = (err) => { return { type: alerts.ERROR_POS, error: err }; };
-const request = (msg) => { return { type: alerts.REQUEST_POS, msg: msg }};
+export function updatePositions() {
+    return dispatch => {
+      dispatch(failure(alerts.ERROR, "perfect"));
+    }
+}

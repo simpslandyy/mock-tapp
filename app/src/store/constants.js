@@ -1,7 +1,11 @@
 export const alerts = {
-  FETCH_POSITIONS: 'SUCCESS_FETCH',
-  REQUEST_POS: 'REQUEST_POS',
-  ERROR_POS: 'ERROR_POS'
+  FETCH_POSITIONS: 'SUCCESS_POS_FETCH',
+  FETCH_ASSIGNMENTS: 'SUCCESS_ASSIGN_FETCH',
+  REQUEST: 'REQUEST',
+  ERROR: 'ERROR',
+  REQUEST_SEND_EMAILS: "PENDING_SEND",
+  SUCCESS_SEND_EMAILS: "SUCCCESFULLY_SENT",
+  ERROR_SEND_EMAILS: "ERROR_SEND"
 
 }
 
@@ -13,6 +17,7 @@ export const routes = {
   INSTRUCTORS: '/instructors',
   EMAILASSIGNMENTS: '/email-assignments'
 }
+
 
 export const methods = {
   GET: {

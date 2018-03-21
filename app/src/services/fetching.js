@@ -49,10 +49,10 @@ export const getInstructors = () => {
   return fetchCall(routes.INSTRUCTORS, methods.GET);
 }
 
-export const putPositions = (body) => {
+export const putPositions = (url_prefix, body) => {
   let config = methods.PUT;
   config['body'] = JSON.stringify(body);
-  return fetchCall(routes.POSITIONS, config)
+  return fetchCall(routes.POSITIONS + '/' + url_prefix, config)
 }
 
 export const postEmails = (body) => {
