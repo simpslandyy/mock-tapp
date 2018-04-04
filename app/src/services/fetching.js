@@ -52,6 +52,8 @@ export const getInstructors = () => {
 export const putPositions = (url_prefix, body) => {
   let config = methods.PUT;
   config['body'] = JSON.stringify(body);
+  console.log("FETCHING LOGIC: ")
+  console.log(body)
   return fetchCall(routes.POSITIONS + '/' + url_prefix, config)
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { GridWrapper } from '../components/gridWrapper';
 import { getPositionsBy, getPositions } from '../store/positions/reducer';
+import { getInstructors } from '../store/instructors/reducer';
 import { emailAssignments } from '../store/assignments/action';
 import { updatePositions } from '../store/positions/action';
 
@@ -26,17 +27,21 @@ const mapStatetoProps = (state, props) => {
   }
 }
 
+// CHANGE THIS
 const mapDispatchtoProps = (dispatch) => {
-  return {
-    onEmailClick: () => {
-      dispatch(updatePositions());
-    }
-  }
   // return {
-  //   onEmailClick: (course_code, round_id, key) => {
-  //       dispatch(emailAssignments(course_code, round_id, key));
+  //   onEmailClick: () => {
+  //     dispatch(updatePositions());
   //   }
   // }
+  return {
+    onEmailClick: (course_code, round_id, key) => {
+        dispatch(emailAssignments(course_code, round_id, key));
+    },
+    updateData: (courseID, value, field) => {
+      dispatch(updatePositions(courseID, value, field));
+    }
+  }
 }
 
 const connectedPositions = connect(mapStatetoProps, mapDispatchtoProps)(Positions);

@@ -5,7 +5,7 @@ const { Map } = Immutable;
 const initialState = Map({});
 
 export default function front(state = initialState, action = {}) {
-  console.log(action)
+  // console.log(action)
   switch(action.type) {
     case alerts.REQUEST_SEND_EMAILS:
       console.log("ALERTING REQUEST FOR EMAIL, CHANGING SPINNER");
@@ -32,7 +32,12 @@ export default function front(state = initialState, action = {}) {
       email.style.color = "red";
       email.title = action.error.message;
       return state;
-
+      case alerts.SUCCESS_POSITION_UPDATE:
+      var element = document.getElementById(action.extra.eID);
+      element.style.validationState = 'form-group has-success';
+      case alerts.FAILURE_POSITION_UPDATE:
+      var element = document.getElementById(action.extra.eID);
+      element.className = 'form-group has-failure';
       case alert.REQUEST:
         console.log(action.msg);
         return state;
