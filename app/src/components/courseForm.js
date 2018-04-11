@@ -48,46 +48,56 @@ class CourseForm extends React.Component {
                </td>
                <td className="col-3">
                  <Form
-                     formid={'estimatedEnrol-' + this.props.dataID}
-                     type="number"
-                     defaultVal={this.props.data.current_enrolment}
-                     update={val => {
-                         if (val != this.props.data.current_enrolment) {
-                             this.props.updateData(
-                                 this.props.dataID,
-                                 val,
-                                 'estimatedEnrol'
-                             );
-                         }
-                     }}/>
-                     <Form
-                          formid={'cap-' + this.props.dataID}
-                          type="number"
-                          defaultVal={this.props.data.cap_enrolment}
-                          update={val => {
-                              if (val != this.props.data.cap_enrolment) {
-                                  this.props.updateData(
-                                      this.props.dataID,
-                                      val,
-                                      'cap'
-                                  );
-                              }
-                          }}
-                      />
-                      <Form
-                          formid={'waitlist-' + this.props.dataID}
-                          type="number"
-                          defaultVal={this.props.data.num_waitlisted}
-                          update={val => {
-                              if (val != this.props.data.num_waitlisted) {
-                                  this.props.updateData(
-                                      this.props.dataID,
-                                      val,
-                                      'waitlist'
-                                  );
-                              }
-                          }}
-                      />
+                       formid={'estimatedEnrol-' + this.props.dataID}
+                       type="number"
+                       defaultVal={this.props.data.current_enrolment}
+                       update={val => {
+                           if (val != this.props.data.current_enrolment) {
+                               this.props.updateData(
+                                   this.props.dataID,
+                                   val,
+                                   'estimatedEnrol'
+                               );
+                           }
+                       }}
+                       focus={() => {
+                         this.props.focusThis('estimatedEnrol', this.props.dataID);
+                       }}
+                     />
+                   <Form
+                        formid={'cap-' + this.props.dataID}
+                        type="number"
+                        defaultVal={this.props.data.cap_enrolment}
+                        update={val => {
+                            if (val != this.props.data.cap_enrolment) {
+                                this.props.updateData(
+                                    this.props.dataID,
+                                    val,
+                                    'cap'
+                                );
+                            }
+                        }}
+                        focus={() => {
+                          this.props.focusThis('cap', this.props.dataID);
+                        }}
+                    />
+                    <Form
+                        formid={'waitlist-' + this.props.dataID}
+                        type="number"
+                        defaultVal={this.props.data.num_waitlisted}
+                        update={val => {
+                            if (val != this.props.data.num_waitlisted) {
+                                this.props.updateData(
+                                    this.props.dataID,
+                                    val,
+                                    'waitlist'
+                                );
+                            }
+                        }}
+                        focus={() => {
+                          this.props.focusThis('waitlist', this.props.dataID);
+                        }}
+                    />
                 </td>
                 <td className="col-4">
                    <p>
@@ -104,12 +114,16 @@ class CourseForm extends React.Component {
                        defaultVal={this.props.data.estimated_count}
                        update={val => {
                            if (val != this.props.data.estimated_count) {
+                              console.log('updating')
                                this.props.updateData(
                                    this.props.dataID,
                                    val,
                                    'estimatedPositions'
                                );
                            }
+                       }}
+                       focus={() => {
+                         this.props.focusThis('estimatedPositions', this.props.dataID);
                        }}
                    />
                    <Form
@@ -125,6 +139,9 @@ class CourseForm extends React.Component {
                                );
                            }
                        }}
+                       focus={() => {
+                         this.props.focusThis('positionHours', this.props.dataID);
+                       }}
                    />
                </td>
                <td className="col-6">
@@ -137,7 +154,7 @@ class CourseForm extends React.Component {
                        defaultVal={
                            this.props.data.start_date
                                ? this.props.data.start_date.split('T')[0]
-                               : "hello"
+                               : undefined
                        }
                        update={val => {
                            if (val != this.props.data.start_date) {
@@ -148,6 +165,10 @@ class CourseForm extends React.Component {
                                );
                            }
                        }}
+                       focus={() => {
+                         this.props.focusThis('startDate', this.props.dataID);
+                       }}
+
                    />
                    <p>
                        <b>End Date: </b>
@@ -161,7 +182,7 @@ class CourseForm extends React.Component {
                                : undefined
                        }
                        update={val => {
-                           if (val != this.props.course.end_date) {
+                           if (val != this.props.data.end_date) {
                                this.props.updateData(
                                    this.props.dataID,
                                    val,
@@ -169,6 +190,10 @@ class CourseForm extends React.Component {
                                );
                            }
                        }}
+                       focus={() => {
+                         this.props.focusThis('endDate', this.props.dataID);
+                       }}
+
                    />
                </td>
             </tr>
@@ -181,20 +206,29 @@ class CourseForm extends React.Component {
 
 
 // input that allows form submission
-const Form = props =>
-    <form
+const Form = props => {
+  return (  <form
         onSubmit={event => {
+            // prevents re-rendering even when i dispatch another action
             event.preventDefault();
             props.update(event.target.elements[0].value);
-        }}>
-        <FormGroup id={props.formid} controlId={props.formid} validationState={null}>
+        }}
+        >
+        <FormGroup id={props.formid} controlId={props.formid}>
         <FormControl
             type={props.type}
             defaultValue={props.defaultVal != undefined ? props.defaultVal : ''}
-            onBlur={event => props.update(event.target.value)}
+            onFocus={() => props.focus()}
+            onBlur={event => {
+              if (props.type == 'date') {
+                props.update(event.target.value);
+              }
+            }}
+
         />
         </FormGroup>
-</form>;
+</form>)
+};
 
 
 export { CourseForm };

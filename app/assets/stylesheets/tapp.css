@@ -148,7 +148,7 @@ footer div p {
 }
 
 /* for CourseList contents in Courses view */
-#courses-grid .course-list-group .list-group-item {
+#course-grid .course-list-group .list-group-item {
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -173,7 +173,7 @@ footer div p {
 }
 
 /* for CourseForm in Courses view */
-#courses-grid #course-form {
+#course-grid #course-form {
     width: calc(100% - var(--course-list-panel-width));
     float: left;
     height: var(--main-div-height);
@@ -295,7 +295,7 @@ footer div p {
 .course-panel .fa-envelope-o{
   float: left;
 }
-#courses-grid {
+#course-grid {
     --text-input-height: 30px;
     --sep-width: 10px; /* width of margin between columns */
     --col-1-width: 220px; /* immutable course information */

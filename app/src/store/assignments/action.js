@@ -1,32 +1,37 @@
+import "regenerator-runtime/runtime";
+
 import { getAssignments, postEmails } from '../../services/fetching';
 import { alerts } from '../constants';
 import { success, failure, request } from '../dispatchBuild';
+import { methods } from '../constants';
+import { routes } from '../constants';
 
-export function fetchAssignments() {
-  return dispatch => {
+export const fetchAssignments = () => {
+  return async (dispatch) => {
       dispatch(request(alerts.REQUEST,'Fetching assignments'));
 
-      getAssignments().then(resp => {
-        if (resp.status == 200) {
-          dispatch(success(alerts.FETCH_ASSIGNMENTS, resp.data))
-        } else {
-          dispatch(failure(alerts.ERROR, resp.data.message))
-        }
-      })
+      let response = await fetch(routes.ASSIGNMENTS, methods.GET);
+      if (response.ok) {
+        let data = await response.json();
+        dispatch(success(alerts.FETCH_ASSIGNMENTS, data))
+      } else {
+        dispatch(failure(alerts.ERROR, response.statusText))
+      }
   }
 }
 
-export function emailAssignments(code, round, key) {
+export const emailAssignments = (code, round, key) => {
 
-  return dispatch => {
+  return async (dispatch) => {
     dispatch(request(alerts.REQUEST_SEND_EMAILS, 'Pending to send emails', {emailID: 'email-' + key, spinnerID: 'spinner-' + key}));
 
-    postEmails({position: code, round_id: round}).then(resp => {
-      if (resp.status == 200) {
-        dispatch(success(alerts.SUCCESS_SEND_EMAILS, null,  {emailID: 'email-' + key, spinnerID: 'spinner-' + key}));
-      } else {
-        dispatch(failure(alerts.ERROR_SEND_EMAILS, resp.data.message,  {emailID: 'email-' + key, spinnerID: 'spinner-' + key}));
-      }
-    })
+    let config = methods.POST;
+    config['body'] = JSON.stringify({position: code, round_id: round});
+    let response = await fetch(routes.EMAILASSIGNMENTS, config);
+    if (response.ok) {
+      dispatch(success(alerts.SUCCESS_SEND_EMAILS, null,  {emailID: 'email-' + key, spinnerID: 'spinner-' + key}));
+    } else {
+      dispatch(failure(alerts.ERROR_SEND_EMAILS, response.statusText,  {emailID: 'email-' + key, spinnerID: 'spinner-' + key}));
+    }
   }
 }

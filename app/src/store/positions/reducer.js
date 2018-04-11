@@ -9,7 +9,7 @@ export default function positions(state = initialState, action = {}) {
   switch(action.type) {
     case alerts.FETCH_POSITIONS:
       action.data.forEach((position) => {
-        state = state.set(position.id, position);
+        state = state.set(position.id, setCampus(position));
       })
       return state;
     case alerts.ERROR:
@@ -20,36 +20,61 @@ export default function positions(state = initialState, action = {}) {
   }
 }
 
+//////////---HELPERS
+const comparator = (positionA, positionB) => {
+  if (positionA.id < positionB.id) { return -1; }
+  if (positionA.id > positionB.id) { return 1; }
+  if (positionA.id == positionB.id) { return 0; }
+
+}
+
+const setCampus = (position) => {
+  var p = position;
+
+  switch (position.campus_code) {
+    case 1:
+      p['campus_code'] = 'St.George'
+      break;
+    case 2:
+      p['campus_code'] = 'Mississauga';
+      break;
+    case 3:
+      p['campus_code'] = 'Scarborough';
+      break;
+    default:
+      p['campus_code'] = 'Other';
+      break;
+  }
+
+  return p;
+}
 
 ////////// ---- SELECTORS -----
-
-export function getPositionsBy(state, listable, bundling_key = null) {
+export const getPositionsBy = (state, listable, bundling_key = null) => {
   let bundle = [];
   if (state.isEmpty()) {
     return bundle;
   }
-
+  // Sort the state by id
+  state = state.sort(comparator);
   if (!bundling_key) {
-    state.valueSeq().forEach(position => {
-      bundle.push(position[listable]);
-    })
+    bundle = state.map(position => position[listable]).toArray();
   } else {
-    state.valueSeq().forEach(position => {
-      bundle.push({id: position[bundling_key], name: position[listable]})
-    })
+    bundle = state.map((position) => {
+      return { id: position[bundling_key], name: position[listable] };
+    }).toArray();
   }
-
   return bundle;
 }
 
-export function getPositions(state) {
+export const getPositions = (state) => {
   let bundle = [];
   if (state.isEmpty()) {
     return bundle;
   }
-  state.valueSeq().forEach(position => {
-    bundle.push(position)
-  })
+
+  state = state.sort(comparator);
+  bundle = state.map(position => position).toArray();
 
   return bundle;
 }

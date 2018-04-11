@@ -1,67 +1,71 @@
+import "regenerator-runtime/runtime";
+
 import { getPositions } from '../../services/fetching';
 import { alerts } from '../constants';
 import { success, failure, request } from '../dispatchBuild';
-import { putPositions } from '../../services/fetching';
+import { methods } from '../constants';
+import { routes } from '../constants';
 
-export function fetchPositions() {
-  return dispatch => {
+export const fetchPositions = () => {
+  return async (dispatch) => {
+    console.log('fetching again')
       dispatch(request(alerts.REQUEST, 'Fetching positions'));
 
-      getPositions().then(resp => {
-        if (resp.status == 200) {
-          dispatch(success(alerts.FETCH_POSITIONS, resp.data))
-        } else {
-          dispatch(failure(alerts.ERROR, resp.data.message))
-        }
-      })
+      let response = await fetch(routes.POSITIONS, methods.GET);
+      let data = await response.json();
+      if (response.ok) {
+          dispatch(success(alerts.FETCH_POSITIONS, data));
+      } else {
+          dispatch(failure(alerts.ERROR, data.message));
+      }
   }
 }
 
-export function updatePositions(courseID, value, field) {
-    return dispatch => {
-      // dispatch(request(alerts.REQUEST, 'Updating a position'));
-      var data = {};
+export const updatePositions = (courseID, value, field) => {
+    return async (dispatch) => {
+      dispatch(request(alerts.REQUEST, 'Updating a position'));
+      var body = {};
       switch(field) {
         case 'estimatedPositions':
-            data['estimated_count'] = value;
+            body['estimated_count'] = value;
             break;
         case 'positionHours':
-            data['hours'] = value;
+            body['hours'] = value;
             break;
         case 'estimatedEnrol':
-            data['current_enrolment'] = value;
+            body['current_enrolment'] = value;
             break;
         case 'qual':
-            data['qualifications'] = value;
+            body['qualifications'] = value;
             break;
         case 'resp':
-            data['duties'] = value;
+            body['duties'] = value;
             break;
         case 'cap':
-            data['cap_enrolment'] = value;
+            body['cap_enrolment'] = value;
             break;
         case 'waitlist':
-            data['num_waitlisted'] = value;
+            body['num_waitlisted'] = value;
             break;
         case 'startDate':
-            data['start_date'] = value;
+            body['start_date'] = value;
             break;
         case 'endDate':
-            data['end_date'] = value;
+            body['end_date'] = value;
             break;
       }
-      console.log('UPDATE POSITIONS: ' + data)
-      putPositions(courseID, data).then((resp) => {
-        if (resp.status == 400) {
-          console.log("A failure has occured")
-          dispatch(failure(alerts.FAILURE_POSITION_UPDATE, resp.data.message, {eID: field + '-' + courseID}));
-        } else {
-          console.log("Everything is fine")
-          // dispatch(success(alerts.SUCCESS_POSITION_UPDATE, {eID: field + '-' + courseID}))
-          fetchPositions();
-        }
-      });
-    }
-    /// Note: if the request fails ... nothing is caught ... is this a problem??
+      console.log('UPDATE POSITIONS: ' + body)
 
-}
+      let config = methods.PUT;
+      config['body'] = JSON.stringify(body);
+      let response = await fetch(routes.POSITIONS + '/' + courseID, config);
+      if (response.ok) {
+        dispatch(fetchPositions());
+        dispatch(success(alerts.SUCCESS_POSITION_UPDATE, {eID: field + '-' + courseID}));
+      } else {
+        console.log('error')
+        dispatch(failure(alerts.FAILURE_POSITION_UPDATE, response.statusText, {eID: field + '-' + courseID}));
+      }
+
+    }
+};

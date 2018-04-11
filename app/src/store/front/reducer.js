@@ -32,16 +32,29 @@ export default function front(state = initialState, action = {}) {
       email.style.color = "red";
       email.title = action.error.message;
       return state;
-      case alerts.SUCCESS_POSITION_UPDATE:
+
+    case alerts.FORM_FOCUS:
+      var element = document.getElementById(action.data.eID);
+      element.className = 'form-group has-null'
+      return state;
+
+    case alerts.SUCCESS_POSITION_UPDATE:
+      var element = document.getElementById(action.data.eID);
+      element.className = 'form-group has-success';
+      return state;
+
+    case alerts.FAILURE_POSITION_UPDATE:
+      console.log("HERE")
       var element = document.getElementById(action.extra.eID);
-      element.style.validationState = 'form-group has-success';
-      case alerts.FAILURE_POSITION_UPDATE:
-      var element = document.getElementById(action.extra.eID);
-      element.className = 'form-group has-failure';
-      case alert.REQUEST:
+      console.log(element)
+      element.className = 'form-group has-error';
+      return state;
+
+    case alert.REQUEST:
         console.log(action.msg);
         return state;
-      case alert.ERROR:
+
+    case alert.ERROR:
         console.log(action.error);
         return state;
     default:

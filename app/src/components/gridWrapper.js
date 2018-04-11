@@ -12,7 +12,7 @@ class GridWrapper extends React.Component {
       <Grid fluid id={this.props.container + "-grid"}>
         <GridList {...this.props} />
 
-        <Panel id={this.props.header + '-form'}>
+        <Panel id={this.props.container + '-form'}>
           <ListGroup fill>
             {data.map((value, key) =>
               <CourseForm

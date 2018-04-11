@@ -5,6 +5,7 @@ import { getPositionsBy, getPositions } from '../store/positions/reducer';
 import { getInstructors } from '../store/instructors/reducer';
 import { emailAssignments } from '../store/assignments/action';
 import { updatePositions } from '../store/positions/action';
+import { onFormFocus } from '../store/front/action';
 
 class Positions extends React.Component {
   constructor(props) {
@@ -21,8 +22,8 @@ const mapStatetoProps = (state, props) => {
   return {
     gridListData: getPositionsBy(state.positions, 'position', 'round_id'),
     listGroupData: getPositions(state.positions),
-    name: 'Positions',
-    header: 'position',
+    header: 'Courses',
+    container: 'course',
     email_hover: 'Send TA Assignment to instructors'
   }
 }
@@ -40,6 +41,9 @@ const mapDispatchtoProps = (dispatch) => {
     },
     updateData: (courseID, value, field) => {
       dispatch(updatePositions(courseID, value, field));
+    },
+    focusThis: (field, courseID) => {
+      dispatch(onFormFocus(field, courseID));
     }
   }
 }
