@@ -4,7 +4,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import '../tapp-styles.sass';
+import '../tapp-styles';
 import * as reducers from '../../src/appReducer';
 import  { TAPP }  from '../../src/containers/tapp';
 
